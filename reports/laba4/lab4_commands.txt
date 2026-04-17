@@ -1,0 +1,31 @@
+docker compose exec app alembic init migrations — створення папки для міграцій (один раз)
+
+docker compose exec app alembic revision --autogenerate -m "текст" — генерація файлу міграції за моделями
+
+docker compose exec app alembic upgrade head — застосування міграції (створення таблиць у базі)
+
+docker compose exec app alembic stamp base — обнулення пам'яті бази про попередні міграції
+
+docker compose exec app pip install asyncpg — встановлення драйвера asyncpg у контейнер
+
+docker compose exec app pip show asyncpg — перевірка версії встановленого драйвера
+
+docker compose exec app python -m app.seed — запуск скрипта для тестового наповнення бази
+
+docker compose exec db psql -U user -d fastapi_db -c "SELECT * FROM categories;" — виконання SQL-запиту без входу в оболонку
+
+docker compose exec db psql -U user -d fastapi_db -c "SELECT p.title, c.name as category, u.username as author FROM posts p JOIN categories c ON p.category_id = c.id JOIN users u ON p.author_id = u.id;" — виконання складного SQL-запиту (для скріншота зв'язків)
+
+git branch — перегляд списку гілок
+
+git checkout dev — перехід на вказану гілку (наприклад, dev)
+
+git checkout prod . — копіювання файлів з гілки prod у поточну (крапка обов'язкова)
+
+git add . — додавання всіх змінених файлів до збереження
+
+git commit -m "текст" — створення збереження (коміту)
+
+git push origin dev — відправка коду в хмару на GitHub
+
+git merge --abort — скасування невдалого злиття (якщо є конфлікти)

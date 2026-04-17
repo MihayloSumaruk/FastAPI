@@ -1,0 +1,15 @@
+docker compose up -d — запуск проекту у фоновому режимі
+
+docker compose down — зупинка контейнерів
+
+docker compose down -v — зупинка та повне видалення бази даних
+
+docker compose ps — перевірка статусу контейнерів
+
+docker compose logs -f app — перегляд логів додатка
+
+docker compose exec db psql -U user -d fastapi_db — вхід у термінал бази даних (psql)
+
+\dt — вивід списку всіх таблиць (вводити всередині psql)
+
+\q — вихід із терміналу бази даних (вводити всередині psql)
