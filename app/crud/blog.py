@@ -5,15 +5,23 @@ from app.models.all_models import Post
 from app.schemas.blog import PostCreate
 
 async def create_post(db: AsyncSession, post_data: PostCreate, author_id: int):
+    # 1. Створюємо об'єкт поста
     db_post = Post(**post_data.model_dump(), author_id=author_id)
     db.add(db_post)
-    await db.commit()
     
+    # 2. РОБИМО FLUSH замість commit! Це дасть посту ID, але не "заморозить" його
+    await db.flush() 
+    
+    # 3. Тепер безпечно беремо db_post.id і підтягуємо категорію та коментарі
     result = await db.execute(
         select(Post)
         .options(selectinload(Post.category), selectinload(Post.comments))
         .filter(Post.id == db_post.id)
     )
+    
+    # 4. ФІКСУЄМО транзакцію в базу в самому кінці
+    await db.commit()
+    
     return result.scalars().first()
 
 async def get_post(db: AsyncSession, post_id: int):
