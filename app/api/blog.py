@@ -1,31 +1,40 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.core.database import get_db
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.schemas import blog as schemas
 from app.crud import blog as crud_blog
+from app.models.all_models import User
+from app.core.database import get_db
+from app.api.deps import get_current_user
 
 router = APIRouter()
 
-# --- Категорії ---
-@router.post("/categories/", response_model=schemas.Category)
-def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_db)):
-    return crud_blog.create_category(db=db, category_name=category.name)
-
-@router.get("/categories/", response_model=list[schemas.Category])
-def list_categories(db: Session = Depends(get_db)):
-    return crud_blog.get_categories(db)
-
-# --- Пости ---
 @router.post("/posts/", response_model=schemas.Post)
-def create_new_post(post: schemas.PostCreate, author_id: int, db: Session = Depends(get_db)):
-    # В реальному проекті author_id брався б з токена авторизації
-    return crud_blog.create_post(db=db, post_data=post, author_id=author_id)
+async def create_new_post(
+    post: schemas.PostCreate, 
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user) 
+):
+    """Створити пост може лише авторизований користувач."""
+    return await crud_blog.create_post(db=db, post_data=post, author_id=current_user.id)
 
-@router.get("/posts/", response_model=list[schemas.Post])
-def read_all_posts(db: Session = Depends(get_db)):
-    return crud_blog.get_posts(db)
-
-# --- Коментарі ---
-@router.post("/comments/", response_model=schemas.Comment)
-def leave_comment(comment: schemas.CommentCreate, db: Session = Depends(get_db)):
-    return crud_blog.add_comment(db=db, comment_text=comment.text, post_id=comment.post_id)
+@router.delete("/posts/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_existing_post(
+    post_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user) 
+):
+    """
+    Видалити пост може ТІЛЬКИ його автор.
+    """
+    post = await crud_blog.get_post(db=db, post_id=post_id)
+    if not post:
+        raise HTTPException(status_code=404, detail="Post not found")
+    
+    if post.author_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="You don't have permission to delete someone else's post"
+        )
+    
+    await crud_blog.delete_post(db=db, post_id=post_id)

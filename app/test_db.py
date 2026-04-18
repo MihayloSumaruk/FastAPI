@@ -7,7 +7,7 @@ from app.schemas.blog import PostCreate, CategoryCreate, CommentCreate
 def run_test():
     db = SessionLocal()
     try:
-        print("\n🚀 Починаємо повну перевірку бази...")
+        print("\n Починаємо повну перевірку бази")
 
         # 1. Створюємо юзера (і автоматично профіль)
         user_in = UserCreate(
@@ -43,10 +43,10 @@ def run_test():
         print(f"Кількість коментарів: {len(check_post.comments)}")
         print(f"Текст коментаря: {check_post.comments[0].text}")
         
-        print("\n🔥 ВСЕ ПРАЦЮЄ ІДЕАЛЬНО! Можна здавати.")
+        print("\n WELL DONE")
 
     except Exception as e:
-        print(f"\n❌ ОЙ, ЩОСЬ ПІШЛО НЕ ТАК: {e}")
+        print(f"\n ERROR  {e}")
     finally:
         db.close()
 
