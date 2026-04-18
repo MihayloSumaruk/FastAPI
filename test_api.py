@@ -37,7 +37,7 @@ def run_tests():
         res_del = session.delete(f"{BASE_URL}/blog/posts/{post_id}")
         print(f"Статус видалення: {res_del.status_code}")
         if res_del.status_code == 204:
-            print("✅ Пост успішно видалено!\n")
+            print("Пост успішно видалено \n")
 
     print("--- 4. РОБИМО LOGOUT ---")
     res_logout = session.post(f"{BASE_URL}/auth/logout")
@@ -47,7 +47,7 @@ def run_tests():
     res_fail = session.get(f"{BASE_URL}/users/me")
     print(f"Спроба отримати профіль: Статус {res_fail.status_code}")
     if res_fail.status_code == 401:
-         print("✅ Захист працює! Нас не пустило без куки.")
+         print(" Захист працює ")
 
 if __name__ == "__main__":
     run_tests()

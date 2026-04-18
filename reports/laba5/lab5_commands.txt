@@ -1,0 +1,11 @@
+docker build -t fastapi-app . — створення образу з Dockerfile.
+
+docker images — перегляд списку образів.
+
+docker run -p 8000:8000 --name my-app fastapi-app — запуск контейнера вручну.
+
+docker ps — перегляд запущених контейнерів.
+
+docker stop my-app — зупинка контейнера.
+
+docker rm my-app — видалення контейнера.

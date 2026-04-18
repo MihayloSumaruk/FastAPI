@@ -1,0 +1,7 @@
+docker compose up -d — запуск усієї інфраструктури (додаток + база).
+
+docker compose ps — перевірка статусів контейнерів.
+
+docker compose logs db — перегляд логів бази даних.
+
+docker compose exec db psql -U user -d blog_db — вхід всередину контейнера з базою для перевірки таблиць (якщо ви юзали Postgres).
