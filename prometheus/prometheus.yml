@@ -1,7 +1,23 @@
 global:
-  scrape_interval: 5s 
+  scrape_interval: 15s 
 
 scrape_configs:
-  - job_name: "fastapi-app"
+  # 1. Моніторинг самого себе
+  - job_name: 'prometheus'
     static_configs:
-      - targets: ["app:8000"] 
+      - targets: ['localhost:9090']
+
+  # 2. Моніторинг FastAPI додатку
+  - job_name: 'fastapi-app'
+    static_configs:
+      - targets: ['app:8000'] 
+
+  # 3. Моніторинг PostgreSQL
+  - job_name: 'postgres-db'
+    static_configs:
+      - targets: ['postgres-monitor:9187']
+
+  # 4. Моніторинг Docker-контейнерів
+  - job_name: 'docker-containers'
+    static_configs:
+      - targets: ['docker-monitor:8080']
