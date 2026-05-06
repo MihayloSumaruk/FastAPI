@@ -1,9 +1,0 @@
-docker compose up -d — підняття моніторингу (Prometheus + Grafana).
-
-docker compose logs prometheus — перевірка, чи запустився Прометей.
-
-docker compose logs grafana — перевірка логів Графани.
-
-curl.exe -s http://localhost:8000/metrics — перевірка виводу метрик у терміналі.
-
-docker compose restart app — перезапуск додатка після додавання кастомної метрики.
