@@ -1,23 +1,19 @@
 global:
-  scrape_interval: 15s 
+  scrape_interval: 5s # Прискоримо збір для лаби
 
 scrape_configs:
-  # 1. Моніторинг самого себе
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
 
-  # 2. Моніторинг FastAPI додатку
-  - job_name: 'fastapi-app'
+  - job_name: 'fastapi-app' # Залишаємо так
     static_configs:
       - targets: ['app:8000'] 
 
-  # 3. Моніторинг PostgreSQL
   - job_name: 'postgres-db'
     static_configs:
       - targets: ['postgres-monitor:9187']
 
-  # 4. Моніторинг Docker-контейнерів
-  - job_name: 'docker-containers'
+  - job_name: 'docker-monitor' # Змінили з docker-containers на docker-monitor
     static_configs:
       - targets: ['docker-monitor:8080']
